@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             x:Class="IoT_lat_lon_processor.UI.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             Title="Configurações">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" MaximumWidthRequest="700" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Configurações do Sistema" FontSize="22" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Text="Ajuste os parâmetros do provedor de geocodificação, limites de requisições e persistência." FontSize="14" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Alerta de Política de Tráfego -->
+            <Border IsVisible="{Binding WarningMessage, Converter={x:Null}}"
+                    Stroke="#F59E0B"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14"
+                    BackgroundColor="{AppThemeBinding Light=#FFFBEB, Dark=#78350F}">
+                <Label Text="{Binding WarningMessage}" TextColor="{AppThemeBinding Light=#B45309, Dark=#FDE68A}" FontSize="13" />
+            </Border>
+
+            <!-- Card Geocodificação -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Provedor de Geocodificação" FontSize="16" FontAttributes="Bold" />
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Nome do Provedor:" FontSize="12" FontAttributes="Bold" />
+                        <Entry Text="{Binding Provider}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="URL Base da API:" FontSize="12" FontAttributes="Bold" />
+                        <Entry Text="{Binding BaseUrl}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="User-Agent (identificação do cliente HTTP):" FontSize="12" FontAttributes="Bold" />
+                        <Entry Text="{Binding UserAgent}" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Intervalo Mínimo (ms):" FontSize="12" FontAttributes="Bold" />
+                            <Entry Text="{Binding RequestIntervalMs}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Concorrência Máxima:" FontSize="12" FontAttributes="Bold" />
+                            <Entry Text="{Binding MaxConcurrency}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="14">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Timeout (segundos):" FontSize="12" FontAttributes="Bold" />
+                            <Entry Text="{Binding TimeoutSeconds}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Tentativas (Retries):" FontSize="12" FontAttributes="Bold" />
+                            <Entry Text="{Binding MaxRetries}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" Spacing="4">
+                            <Label Text="Precisão Cache (decimais):" FontSize="12" FontAttributes="Bold" />
+                            <Entry Text="{Binding CachePrecision}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Card Processamento e Logs -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Processamento e Armazenamento Local" FontSize="16" FontAttributes="Bold" />
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Gravar Checkpoint a Cada N Linhas:" FontSize="12" FontAttributes="Bold" />
+                        <Entry Text="{Binding CheckpointEveryRows}" Keyboard="Numeric" />
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout Spacing="12">
+                        <Switch IsToggled="{Binding KeepInputFiles}" />
+                        <Label Text="Copiar e Manter Arquivos de Entrada na pasta do processamento" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="12">
+                        <Switch IsToggled="{Binding KeepLogs}" />
+                        <Label Text="Gerar Logs Estruturados (processamento.jsonl) por lote" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label IsVisible="{Binding StatusMessage, Converter={x:Null}}"
+                   Text="{Binding StatusMessage}"
+                   TextColor="#16A34A"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Ações -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                <Button Grid.Column="0"
+                        Text="💾 Salvar Configurações"
+                        Command="{Binding SaveCommand}"
+                        BackgroundColor="#2563EB"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+
+                <Button Grid.Column="1"
+                        Text="↩️ Restaurar Padrões"
+                        Command="{Binding ResetDefaultsCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

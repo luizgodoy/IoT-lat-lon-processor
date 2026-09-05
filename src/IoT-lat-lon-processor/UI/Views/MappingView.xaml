@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             x:Class="IoT_lat_lon_processor.UI.Views.MappingView"
+             x:DataType="vm:MappingViewModel"
+             Title="Mapeamento de Coordenadas">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20" MaximumWidthRequest="800" HorizontalOptions="Center">
+
+            <!-- Cabeçalho de Identificação do Arquivo -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="{Binding FileName}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        <Label Text="{Binding ApproximateRowCount, StringFormat='Aproximadamente {0:N0} registros detectados'}" FontSize="13" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Seletor de Planilha (quando XLSX tiver múltiplas) -->
+            <VerticalStackLayout IsVisible="{Binding HasMultipleSheets}" Spacing="6">
+                <Label Text="Planilha (Aba):" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding SheetNames}"
+                        SelectedItem="{Binding SelectedSheet}"
+                        Title="Selecione a planilha a processar" />
+            </VerticalStackLayout>
+
+            <!-- Seleção de Colunas -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                <VerticalStackLayout Grid.Column="0" Spacing="6">
+                    <Label Text="Coluna de Latitude:" FontAttributes="Bold" />
+                    <Picker ItemsSource="{Binding Columns}"
+                            SelectedItem="{Binding SelectedLatitudeColumn}"
+                            Title="Selecione a coluna de Latitude" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="6">
+                    <Label Text="Coluna de Longitude:" FontAttributes="Bold" />
+                    <Picker ItemsSource="{Binding Columns}"
+                            SelectedItem="{Binding SelectedLongitudeColumn}"
+                            Title="Selecione a coluna de Longitude" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Painel de Diagnóstico e Alertas de Validação/Inversão -->
+            <Border Stroke="{Binding DiagnosticColor}"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="ℹ️ Diagnóstico das Coordenadas:" FontAttributes="Bold" TextColor="{Binding DiagnosticColor}" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding DiagnosticMessage}" FontSize="14" TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}" />
+
+                    <!-- Opção de confirmação de swap (quando detectado) -->
+                    <HorizontalStackLayout IsVisible="{Binding ShowSwapOption}" Spacing="10" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding SwapAxes}" Color="#2563EB" />
+                        <Label Text="Desejo inverter: utilizar Longitude como Latitude e Latitude como Longitude"
+                               VerticalOptions="Center"
+                               FontAttributes="Bold"
+                               TextColor="#C2185B" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Nome da Coluna de Endereço -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Nome da Coluna a ser Criada no Arquivo:" FontAttributes="Bold" />
+                <Entry Text="{Binding AddressColumnName}"
+                       Placeholder="Endereço"
+                       HeightRequest="42" />
+            </VerticalStackLayout>
+
+            <!-- Botão Processar -->
+            <Button Text="🚀 Iniciar Processamento Reverso"
+                    Command="{Binding StartProcessingCommand}"
+                    BackgroundColor="#2563EB"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="50" />
+
+            <Label IsVisible="{Binding ErrorMessage, Converter={x:Null}}"
+                   Text="{Binding ErrorMessage}"
+                   TextColor="#DC2626"
+                   FontAttributes="Bold" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             xmlns:models="clr-namespace:IoT_lat_lon_processor.Domain.Models"
+             x:Class="IoT_lat_lon_processor.UI.Views.HistoryView"
+             x:DataType="vm:HistoryViewModel"
+             Title="Histórico de Processamentos">
+
+    <Grid RowDefinitions="Auto,*" Padding="20" RowSpacing="16">
+
+        <!-- Barra de Busca e Filtros -->
+        <Border Grid.Row="0"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 8"
+                Padding="16"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <Entry Grid.Column="0"
+                       Text="{Binding SearchText}"
+                       Placeholder="Buscar por nome do arquivo ou ID..."
+                       ReturnCommand="{Binding LoadHistoryCommand}" />
+
+                <Picker Grid.Column="1"
+                        ItemsSource="{Binding StatusOptions}"
+                        SelectedItem="{Binding SelectedStatus}"
+                        WidthRequest="140" />
+
+                <Button Grid.Column="2"
+                        Text="🔍 Pesquisar"
+                        Command="{Binding LoadHistoryCommand}"
+                        BackgroundColor="#2563EB"
+                        TextColor="White"
+                        CornerRadius="8" />
+            </Grid>
+        </Border>
+
+        <!-- Lista de Processamentos Anteriores -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Jobs}">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10" Padding="40">
+                    <Label Text="Nenhum processamento encontrado." FontSize="16" TextColor="#64748B" HorizontalOptions="Center" />
+                    <Label Text="Execute uma busca ou processe novos arquivos na tela Início." FontSize="13" TextColor="#94A3B8" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ProcessingJob">
+                    <Border Margin="0,0,0,12"
+                            Padding="16"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+
+                            <!-- Nome e Data -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding InputFileName}" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                <Label Text="{Binding StartedAt, StringFormat='Iniciado em: {0:dd/MM/yyyy HH:mm:ss}'}" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+
+                            <!-- Badge de Status -->
+                            <Border Grid.Row="0" Grid.Column="1" Padding="8,4" StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}">
+                                <Label Text="{Binding Status}" FontAttributes="Bold" FontSize="12" TextColor="#2563EB" />
+                            </Border>
+
+                            <!-- Estatísticas Resumidas -->
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="16" Margin="0,4,0,4">
+                                <Label Text="{Binding TotalRows, StringFormat='Total: {0:N0}'}" FontSize="12" />
+                                <Label Text="{Binding SuccessRows, StringFormat='Sucesso: {0:N0}'}" FontSize="12" TextColor="#16A34A" />
+                                <Label Text="{Binding ErrorRows, StringFormat='Erros: {0:N0}'}" FontSize="12" TextColor="#DC2626" />
+                                <Label Text="{Binding CacheHits, StringFormat='Cache: {0:N0}'}" FontSize="12" TextColor="#7C3AED" />
+                            </HorizontalStackLayout>
+
+                            <!-- Botões de Ação do Item -->
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Spacing="8">
+                                <Button Text="📄 Abrir Arquivo"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenOutputFileCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="11" HeightRequest="34" CornerRadius="6"
+                                        BackgroundColor="#2563EB" TextColor="White" />
+
+                                <Button Text="📂 Abrir Pasta"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenJobFolderCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="11" HeightRequest="34" CornerRadius="6"
+                                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}" />
+
+                                <Button Text="📋 Log"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenJobLogCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="11" HeightRequest="34" CornerRadius="6"
+                                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}" />
+
+                                <Button Text="▶️ Retomar"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ResumeJobCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="11" HeightRequest="34" CornerRadius="6"
+                                        BackgroundColor="#059669" TextColor="White" />
+
+                                <Button Text="🗑️ Excluir"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteJobCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="11" HeightRequest="34" CornerRadius="6"
+                                        BackgroundColor="#EF4444" TextColor="White" />
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

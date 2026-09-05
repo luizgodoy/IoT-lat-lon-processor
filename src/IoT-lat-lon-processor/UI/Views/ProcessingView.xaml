@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             x:Class="IoT_lat_lon_processor.UI.Views.ProcessingView"
+             x:DataType="vm:ProcessingViewModel"
+             Title="Processamento em Andamento">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="24" MaximumWidthRequest="700" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label Text="Processando Coordenadas..."
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="14"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Barra de Progresso -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="24"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Progresso Total" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="{Binding ProgressPercentage, StringFormat='{0:P1}'}" FontAttributes="Bold" TextColor="#2563EB" />
+                    </Grid>
+
+                    <ProgressBar Progress="{Binding ProgressPercentage}"
+                                 ProgressColor="#2563EB"
+                                 HeightRequest="12" />
+
+                    <Label Text="{Binding ProcessedRows, StringFormat='{0:N0} linhas avaliadas'}"
+                           FontSize="12"
+                           TextColor="#64748B"
+                           HorizontalOptions="End" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Grid de Métricas em Tempo Real -->
+            <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="12" ColumnSpacing="12">
+                <!-- Encontrados -->
+                <Border Grid.Row="0" Grid.Column="0" Padding="14" Stroke="#10B981" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Encontrados" FontSize="12" TextColor="#047857" />
+                        <Label Text="{Binding SuccessCount}" FontSize="22" FontAttributes="Bold" TextColor="#065F46" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Não Encontrados -->
+                <Border Grid.Row="0" Grid.Column="1" Padding="14" Stroke="#F59E0B" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FFFBEB, Dark=#78350F}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Não Localizados" FontSize="12" TextColor="#B45309" />
+                        <Label Text="{Binding NotFoundCount}" FontSize="22" FontAttributes="Bold" TextColor="#92400E" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Erros -->
+                <Border Grid.Row="0" Grid.Column="2" Padding="14" Stroke="#EF4444" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#7F1D1D}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Erros" FontSize="12" TextColor="#B91C1C" />
+                        <Label Text="{Binding ErrorCount}" FontSize="22" FontAttributes="Bold" TextColor="#991B1B" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cache Hits -->
+                <Border Grid.Row="1" Grid.Column="0" Padding="14" Stroke="#8B5CF6" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F5F3FF, Dark=#4C1D95}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Cache / Deduplicação" FontSize="12" TextColor="#6D28D9" />
+                        <Label Text="{Binding CacheHitCount}" FontSize="22" FontAttributes="Bold" TextColor="#5B21B6" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Requisições HTTP -->
+                <Border Grid.Row="1" Grid.Column="1" Padding="14" Stroke="#3B82F6" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Requisições HTTP" FontSize="12" TextColor="#1D4ED8" />
+                        <Label Text="{Binding RequestCount}" FontSize="22" FontAttributes="Bold" TextColor="#1E40AF" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Tempo Decorrido -->
+                <Border Grid.Row="1" Grid.Column="2" Padding="14" Stroke="#64748B" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#334155}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Tempo Decorrido" FontSize="12" TextColor="#475569" />
+                        <Label Text="{Binding ElapsedFormatted}" FontSize="22" FontAttributes="Bold" TextColor="#334155" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Botão Cancelar -->
+            <Button Text="🛑 Cancelar Processamento"
+                    Command="{Binding CancelCommand}"
+                    IsEnabled="{Binding CanCancel}"
+                    BackgroundColor="#DC2626"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="48"
+                    Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

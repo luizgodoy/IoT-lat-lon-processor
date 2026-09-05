@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IoT-lat-lon-processor/IoT-lat-lon-processor.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IoT-lat-lon-processor.Tests/IoT-lat-lon-processor.Tests.csproj" />
+  </Folder>
+</Solution>

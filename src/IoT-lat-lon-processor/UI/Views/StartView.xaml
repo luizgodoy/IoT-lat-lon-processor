@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             x:Class="IoT_lat_lon_processor.UI.Views.StartView"
+             x:DataType="vm:StartViewModel"
+             Title="Início — Processador de Coordenadas">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="24" MaximumWidthRequest="700" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="8">
+                <Label Text="IoT Lat/Lon Processor"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}" />
+                <Label Text="Enriqueça arquivos CSV e XLSX de telemetria e rastreamento com endereços completos via geocodificação reversa."
+                       FontSize="15"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Card de Seleção de Arquivo -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="24"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="1. Seleção do Arquivo de Entrada"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F1F5F9}" />
+
+                    <Label Text="Formatos suportados: .csv (delimitador automático) e .xlsx (múltiplas planilhas)."
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+
+                    <Button Text="📁 Selecionar Arquivo CSV ou XLSX"
+                            Command="{Binding PickFileCommand}"
+                            BackgroundColor="#2563EB"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            HeightRequest="48" />
+
+                    <!-- Informações do Arquivo Selecionado -->
+                    <Border IsVisible="{Binding IsFileSelected}"
+                            Stroke="#3B82F6"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="16"
+                            BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}">
+                        <VerticalStackLayout Spacing="6">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="Arquivo:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#1E40AF, Dark=#DBEAFE}" />
+                                <Label Text="{Binding SelectedFileName}" LineBreakMode="TailTruncation" TextColor="{AppThemeBinding Light=#1E3A8A, Dark=#BFDBFE}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="Tamanho:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#1E40AF, Dark=#DBEAFE}" />
+                                <Label Text="{Binding FileSizeFormatted}" TextColor="{AppThemeBinding Light=#1E3A8A, Dark=#BFDBFE}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="Caminho:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#1E40AF, Dark=#DBEAFE}" />
+                                <Label Text="{Binding SelectedFilePath}" FontSize="11" LineBreakMode="MiddleTruncation" TextColor="{AppThemeBinding Light=#3B82F6, Dark=#93C5FD}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="🔍 Inspecionar e Mapear Colunas"
+                            Command="{Binding AnalyzeCommand}"
+                            IsEnabled="{Binding IsFileSelected}"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            HeightRequest="48" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="#2563EB"
+                                       HeightRequest="30" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Mensagem de Erro -->
+            <Border IsVisible="{Binding ErrorMessage, Converter={x:Null}}"
+                    Stroke="#EF4444"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14"
+                    BackgroundColor="#FEE2E2">
+                <Label Text="{Binding ErrorMessage}" TextColor="#B91C1C" FontSize="13" />
+            </Border>
+
+            <!-- Atalhos de Navegação -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                <Button Grid.Column="0"
+                        Text="📜 Consultar Histórico"
+                        Command="{Binding NavigateToHistoryCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}"
+                        CornerRadius="8" />
+                <Button Grid.Column="1"
+                        Text="⚙️ Configurações"
+                        Command="{Binding NavigateToSettingsCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}"
+                        CornerRadius="8" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

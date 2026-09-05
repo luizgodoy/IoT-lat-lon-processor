@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IoT_lat_lon_processor.UI.ViewModels"
+             x:Class="IoT_lat_lon_processor.UI.Views.ResultView"
+             x:DataType="vm:ResultViewModel"
+             Title="Resumo do Processamento">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" MaximumWidthRequest="750" HorizontalOptions="Center">
+
+            <!-- Banner de Status -->
+            <Border Stroke="{Binding StatusColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                    <Label Text="{Binding Status}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{Binding StatusColor}" />
+                    <Label Text="{Binding InputFileName, StringFormat='Arquivo: {0}'}"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    <Label Text="{Binding DurationFormatted, StringFormat='Duração: {0}'}"
+                           FontSize="13"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Grid de Estatísticas Detalhadas -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Estatísticas do Lote" FontSize="16" FontAttributes="Bold" />
+
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="12" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                            <Label Text="Total de Registros" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding TotalRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                            <Label Text="Registros Válidos" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding ValidRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#16A34A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="2">
+                            <Label Text="Registros Inválidos" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding InvalidRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#DC2626" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                            <Label Text="Endereços Localizados" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding SuccessRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#16A34A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                            <Label Text="Não Localizados" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding NotFoundRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#D97706" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="2">
+                            <Label Text="Inversões Aplicadas" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding SwappedRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#2563EB" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                            <Label Text="Cache / Deduplicação" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding CacheHits, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#7C3AED" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                            <Label Text="Requisições HTTP" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding RequestCount, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#2563EB" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="2">
+                            <Label Text="Erros de Rede/Servidor" FontSize="12" TextColor="#64748B" />
+                            <Label Text="{Binding ErrorRows, StringFormat='{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="#DC2626" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Arquivo de Saída -->
+            <Border Stroke="#3B82F6"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Arquivo Gerado com a Coluna de Endereço:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#1E40AF, Dark=#DBEAFE}" />
+                    <Label Text="{Binding OutputFilePath}" LineBreakMode="MiddleTruncation" FontSize="12" TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ações -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Button Grid.Column="0"
+                        Text="📄 Abrir Arquivo"
+                        Command="{Binding OpenFileCommand}"
+                        BackgroundColor="#2563EB"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+
+                <Button Grid.Column="1"
+                        Text="📂 Abrir Pasta"
+                        Command="{Binding OpenFolderCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+
+                <Button Grid.Column="2"
+                        Text="📋 Ver Log"
+                        Command="{Binding ViewLogCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#1E293B, Dark=#F8FAFC}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+            </Grid>
+
+            <Button Text="🔄 Iniciar Novo Processamento"
+                    Command="{Binding GoHomeCommand}"
+                    BackgroundColor="#059669"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="48" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

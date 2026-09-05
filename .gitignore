@@ -1,0 +1,90 @@
+## --------------------------------------------------
+## .NET / C# / Visual Studio / Visual Studio Code / Rider
+## --------------------------------------------------
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Pp]ublish/
+publish/
+build/
+
+# Visual Studio temporary and cache files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.dbmdl
+*.jsproj.user
+
+# Visual Studio Code
+.vscode/
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains Rider
+.idea/
+*.DotSettings.user
+
+# .NET MAUI / Windows WinUI artifacts
+*.appx
+*.msix
+*.msixbundle
+*.appxbundle
+*.pri
+Generated Files/
+BundleArtifacts/
+AppPackages/
+_pkg/
+
+# NuGet Packages and restore artifacts
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test and Code Coverage results
+TestResults/
+[Tt]est[Rr]esults/
+*.trx
+*.coverage
+*.coveragexml
+*.cobertura.xml
+
+# Crash dumps and profiling
+*.dmp
+*.vsp
+*.vspx
+*.sap
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*~
+*.swp
+*.swo
+
+# Local database files and logs
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.log
+*.jsonl
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
